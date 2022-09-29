@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Patch,
   Post,
@@ -13,24 +11,20 @@ import {
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('coffees')
 export class CoffeesController {
   constructor(private readonly coffeesService: CoffeesService) {}
 
   @Get()
-  findAll(@Query() pagination) {
-    const { limit, offset } = pagination;
-    return this.coffeesService.findAll();
+  findAll(@Query() pagination: PaginationQueryDto) {
+    return this.coffeesService.findAll(pagination);
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    const coffee = this.coffeesService.findOne('' + id);
-    if (!coffee) {
-      throw new HttpException(`coffee ${id} not found`, HttpStatus.NOT_FOUND);
-    }
-    return coffee;
+    return this.coffeesService.findOne(id);
   }
 
   @Post()
@@ -39,12 +33,12 @@ export class CoffeesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
+  update(@Param('id') id: number, @Body() updateCoffeeDto: UpdateCoffeeDto) {
     return this.coffeesService.update(id, updateCoffeeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.coffeesService.remove(id);
   }
 }
