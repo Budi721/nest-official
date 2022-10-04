@@ -17,3 +17,6 @@ untuk membuat migrasi
  npx typeorm migration:generate ./src/migrations/SchemaSync
 
 ```
+
+untuk membedakan configurasi 
+`npx i @nestjs/config`
